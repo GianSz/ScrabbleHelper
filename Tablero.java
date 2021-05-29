@@ -6,7 +6,7 @@
  * @author Gian Paul Sánchez
  * @author Maria Paula Ayala
  * @author Juan Felipe Pinzón
- * @version 2021 05 28
+ * @version 2021 05 29
  */
 
 import java.util.ArrayList;
@@ -353,21 +353,90 @@ public class Tablero{
 
 		else{		
 			
-			boolean cruzado = false;
+			boolean valida = false;
 
 			if(orientacion == 1){
 
 				for(int i = 0; i<palabra.length(); i++){
 
 					if(this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
-						cruzado = true;
+						valida = true;
 					}
 
 					else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
-						cruzado = false;
-						break;
+						return false;
 					}
 
+				}
+			//Verificar palabras verticalmente :)
+				String palabraAVerificarVertical = palabra;
+				int indiceVertical = 1; 
+
+			//Hacia arriba
+				while( 0 <= (filaElegida - indiceVertical) && this.tablero[filaElegida - indiceVertical][columnaElegida] != ' '){
+					
+					palabraAVerificarVertical = this.tablero[filaElegida - indiceVertical][columnaElegida] + palabraAVerificarVertical;
+					
+					indiceVertical++; 
+				}
+
+				indiceVertical = palabra.length();
+
+			//Hacia abajo
+				while( (filaElegida + indiceVertical) < 10 && this.tablero[filaElegida + indiceVertical][columnaElegida] != ' '){
+					
+					palabraAVerificarVertical = palabraAVerificarVertical + this.tablero[filaElegida + indiceVertical][columnaElegida];
+					
+					indiceVertical++; 
+				}
+
+				if(diccionario.buscarPalabras(palabraAVerificarVertical)){
+					valida = true;
+				}
+
+				else{
+					System.out.println("La palabra formada no existe en el diccionario!!");
+					return false;
+				}
+
+			//Verificar cada letra horizontalmente :) 
+
+				for(int i = 0; i < palabra.length(); i++){
+
+					String palabraAVerificar = "" + palabra.charAt(i); 
+					int indiceHorizontal = 1;
+
+				//Hacia la izquierda
+					while(0 <= (columnaElegida - indiceHorizontal) && this.tablero[filaElegida + i][columnaElegida - indiceHorizontal] != ' '){
+						
+						palabraAVerificar = this.tablero[filaElegida + i][columnaElegida -  indiceHorizontal] + palabraAVerificar;
+
+						indiceHorizontal++;
+					}
+
+					indiceHorizontal = 1;
+
+				//Hacia la derecha
+					while((columnaElegida + indiceHorizontal) < 10 && this.tablero[filaElegida + i][columnaElegida + indiceHorizontal] != ' '){
+						
+						palabraAVerificar += this.tablero[filaElegida + i][columnaElegida + indiceHorizontal] ;
+
+						indiceHorizontal++;
+					}
+
+					if(palabraAVerificar.length() == 1){
+						valida = true;
+					}
+
+					else if(diccionario.buscarPalabras(palabraAVerificar)){
+						valida = true;
+					}
+	
+					else{
+						System.out.println("No forma una palabra :(");
+						return false;
+					}
+					
 				}
 
 			}
@@ -377,11 +446,11 @@ public class Tablero{
 				for(int i = 0; i<palabra.length(); i++){
 
 					if(this.tablero[filaElegida][columnaElegida+i] == palabra.charAt(i)){
-						cruzado = true;
+						valida = true;
 					}
 
 					else if(this.tablero[filaElegida+i][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
-						cruzado = false;
+						valida = false;
 						break;
 					}
 
@@ -389,7 +458,7 @@ public class Tablero{
 
 			}
 
-			return cruzado;
+			return valida;
 		}
 	}
 

@@ -15,3 +15,9 @@ carro
 saca
 sapo
 java
+casas
+pasas
+pasa
+celular
+celulares
+casaca

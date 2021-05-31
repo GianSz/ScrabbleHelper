@@ -11,6 +11,7 @@
 
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.lang.IndexOutOfBoundsException;
 
@@ -43,14 +44,8 @@ public class Tablero{
 
 		this.diccionario = d;
 
-		for(int i = 0; i<tablero.length;i++){
-
-			for(int j = 0; j<tablero[0].length; j++){
-
-				tablero[i][j] = ' ';
-
-			}
-
+		for(char[] e: tablero){
+			Arrays.fill(e, ' ');
 		}
 
 	}
@@ -158,11 +153,11 @@ public class Tablero{
 
 		System.out.print("\nIngrese el número de la opción deseada: ");
 
-		int respuesta = scanner.nextInt();
+		int orientacion = scanner.nextInt();
 
 
 		//Condicionales para saber si la orientación deseada es vertical, horizontal o si se ingresó una opción erronéa.
-		if(respuesta == 1){
+		if(orientacion == 1){
 
 			try{
 
@@ -172,7 +167,7 @@ public class Tablero{
 				System.out.print("\nEscriba la columna en la cual desea colocar la primera letra de su palabra: ");
 				int columnaElegida = scanner.nextInt();
 
-				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, respuesta, s)){
+				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, orientacion, s)){
 					for(int i=0; i<s.length(); i++){
 						
 						this.tablero[filaElegida + i][columnaElegida] = s.charAt(i);
@@ -196,7 +191,7 @@ public class Tablero{
 
 		}
 
-		else if(respuesta == 2){
+		else if(orientacion == 2){
 
 			try{
 
@@ -206,7 +201,7 @@ public class Tablero{
 				System.out.print("\nEscriba la columna en la cual desea colocar la primera letra de su palabra: ");
 				int columnaElegida = scanner.nextInt();
 
-				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, respuesta, s)){
+				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, orientacion, s)){
 					for(int i=0; i<s.length(); i++){
 
 						this.tablero[filaElegida][columnaElegida+i] = s.charAt(i);
@@ -216,7 +211,12 @@ public class Tablero{
 				}
 
 				else{
+
 					System.out.println("\nLas coordenadas ingresadas son inválidas. Inténtelo de nuevo.");
+
+					//Se muestra el tablero al salir el error.
+					dibujarTablero();
+
 					ubicarPalabrasEnTablero(s);
 				}
 			}
@@ -224,6 +224,9 @@ public class Tablero{
 			catch(IndexOutOfBoundsException e){
 
 				System.out.println("\nTu palabra excede los limites del tablero. Vuelve a intentarlo.");
+
+				//Se muestra el tablero al salir el error.
+				dibujarTablero();
 
 				ubicarPalabrasEnTablero(s);
 			}
@@ -336,15 +339,15 @@ public class Tablero{
 
 		if(this.palabrasEnTablero.size() == 1){
 
-          if(orientacion == 1 && palabra.length() + filaElegida <= 10) {
+          	if(orientacion == 1 && palabra.length() + filaElegida <= 10) {
 			  return true;
 		  	}
 
-          else if (orientacion == 2 && palabra.length() + columnaElegida <= 10) {
+          	else if (orientacion == 2 && palabra.length() + columnaElegida <= 10) {
 			  return true;
 			}
 
-          else {
+          	else {
 			  return false; 
 		  	}
 
@@ -355,8 +358,10 @@ public class Tablero{
 			
 			boolean valida = false;
 
+			//Si la orientación es vertical.
 			if(orientacion == 1){
 
+				//Se verifica si es posible colocar la palabra en el espacio indicado por el usuario.
 				for(int i = 0; i<palabra.length(); i++){
 
 					if(this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
@@ -368,11 +373,14 @@ public class Tablero{
 					}
 
 				}
-			//Verificar palabras verticalmente :)
+
+
+				//Se  debe verificar que la palabra a cocloar en el tablero está concatenada con otras palabras previamente colocadas en el tablero, y si lo está, entonces se debe verificar que si forme una palabra existente en el diccionario. Más abajo se hace se tiene en cuenta el caso en que dos o más palabras se encuentren una pegada de la otra, verificando que las nuevas combinaciones creadas a partir de está "unión" existan en el diccionario.
 				String palabraAVerificarVertical = palabra;
 				int indiceVertical = 1; 
 
-			//Hacia arriba
+
+				//Se mira si hay letras por encima de la palabra, si hay letras, entonces se agregan como un prefijo a la palabra que queremos añadir.
 				while( 0 <= (filaElegida - indiceVertical) && this.tablero[filaElegida - indiceVertical][columnaElegida] != ' '){
 					
 					palabraAVerificarVertical = this.tablero[filaElegida - indiceVertical][columnaElegida] + palabraAVerificarVertical;
@@ -382,7 +390,7 @@ public class Tablero{
 
 				indiceVertical = palabra.length();
 
-			//Hacia abajo
+				//Se mira si hay letras por debajo de la palabra, si hay letras, entonces se agregan como un sufijo a la palabra que queremos añadir.
 				while( (filaElegida + indiceVertical) < 10 && this.tablero[filaElegida + indiceVertical][columnaElegida] != ' '){
 					
 					palabraAVerificarVertical = palabraAVerificarVertical + this.tablero[filaElegida + indiceVertical][columnaElegida];
@@ -390,23 +398,24 @@ public class Tablero{
 					indiceVertical++; 
 				}
 
+				//Por útlimo para verificar que la palabra si existe, se hace uso del método buscarPalabras.
 				if(diccionario.buscarPalabras(palabraAVerificarVertical)){
 					valida = true;
 				}
 
 				else{
-					System.out.println("La palabra formada no existe en el diccionario!!");
+					System.out.println("¡La palabra formada no existe en el diccionario!");
 					return false;
 				}
 
-			//Verificar cada letra horizontalmente :) 
 
+				//Se verifica caracter por caracter 
 				for(int i = 0; i < palabra.length(); i++){
 
 					String palabraAVerificar = "" + palabra.charAt(i); 
 					int indiceHorizontal = 1;
 
-				//Hacia la izquierda
+					//Hacia la izquierda
 					while(0 <= (columnaElegida - indiceHorizontal) && this.tablero[filaElegida + i][columnaElegida - indiceHorizontal] != ' '){
 						
 						palabraAVerificar = this.tablero[filaElegida + i][columnaElegida -  indiceHorizontal] + palabraAVerificar;
@@ -416,7 +425,7 @@ public class Tablero{
 
 					indiceHorizontal = 1;
 
-				//Hacia la derecha
+					//Hacia la derecha
 					while((columnaElegida + indiceHorizontal) < 10 && this.tablero[filaElegida + i][columnaElegida + indiceHorizontal] != ' '){
 						
 						palabraAVerificar += this.tablero[filaElegida + i][columnaElegida + indiceHorizontal] ;
@@ -428,6 +437,7 @@ public class Tablero{
 						valida = true;
 					}
 
+					//Buscamos en el diccionario la palabra creada con los caracteres de izquierda a derecha.
 					else if(diccionario.buscarPalabras(palabraAVerificar)){
 						valida = true;
 					}
@@ -441,6 +451,7 @@ public class Tablero{
 
 			}
 
+			//Si la orientación es horizontal
 			else{
 
 				for(int i = 0; i<palabra.length(); i++){
@@ -449,9 +460,84 @@ public class Tablero{
 						valida = true;
 					}
 
-					else if(this.tablero[filaElegida+i][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
-						valida = false;
-						break;
+					else if(this.tablero[filaElegida][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
+						return false;
+					}
+
+				}
+
+
+				String palabraAVerificarHorizontal = palabra;
+				int indiceHorizontal = 1; 
+
+				//Se verifica si hay letras a la izquierda de la palabra a colocar.
+				while(0 <= (columnaElegida - indiceHorizontal) && this.tablero[filaElegida][columnaElegida - indiceHorizontal] != ' '){
+					
+					palabraAVerificarHorizontal = this.tablero[filaElegida][columnaElegida - indiceHorizontal] + palabraAVerificarHorizontal;
+
+					indiceHorizontal++;
+
+				}
+
+				indiceHorizontal = palabra.length();
+
+				//Se verifica si hay letras a la derecha de la palabra a colocar.
+				while( (columnaElegida + indiceHorizontal) < 10 && this.tablero[filaElegida][columnaElegida + indiceHorizontal] != ' '){
+
+					palabraAVerificarHorizontal = palabraAVerificarHorizontal + this.tablero[filaElegida][columnaElegida + indiceHorizontal];
+
+					indiceHorizontal++;
+					
+				}
+
+				if(diccionario.buscarPalabras(palabraAVerificarHorizontal)){
+
+					valida = true;
+
+				}
+
+				else{
+					System.out.println("¡La palabra formada no existe en el diccionario!");
+					return false;
+				}
+
+
+				for(int i = 0; i<palabra.length(); i++){
+
+					String palabraAVerificar = "" + palabra.charAt(i);
+					int indiceVertical = 1;
+
+					//Para arriba
+					while(0 <= (filaElegida - indiceVertical) && this.tablero[filaElegida - indiceVertical][columnaElegida+i]!=' '){
+
+						palabraAVerificar = this.tablero[filaElegida-indiceVertical][columnaElegida+i] + palabraAVerificar;
+
+						indiceVertical++;
+
+					}
+
+					indiceVertical = 1;
+
+					//Para abajo
+					while((filaElegida + indiceVertical)<10 && this.tablero[filaElegida + indiceVertical][columnaElegida+i]!=' '){
+
+						palabraAVerificar = palabraAVerificar + this.tablero[filaElegida + indiceVertical][columnaElegida+i];
+
+						indiceVertical++;
+
+					}
+
+					if(palabraAVerificar.length() == 1){
+						valida = true;
+					}
+
+					else if(diccionario.buscarPalabras(palabraAVerificar)){
+						valida = true;
+					}
+
+					else{
+						System.out.println("No forma una palabra :(");
+						return false;
 					}
 
 				}

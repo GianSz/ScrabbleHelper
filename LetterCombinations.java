@@ -86,12 +86,13 @@ public class LetterCombinations{
 
 		if(s.length() == longitud) {
 
-
 			//Si se encuentra en el diccionario, si no se encuentra en palabrasASugerir y si no se encuentra en palabrasEnTablero, añada la palabra en palabrasASugerir.
 			if(diccionario.buscarPalabras(s) && !(palabrasASugerir.contains(s)) && !(tablero.getPalabrasEnTablero().contains(s))) {
 				
 				this.palabrasASugerir.add(s);
 			}
+
+
 
 		}
 
@@ -116,7 +117,8 @@ public class LetterCombinations{
 	public void crearPalabras(String letrasDeMiMano) {
 		String letras = letrasDeMiMano;
 		init(letras);
-		for(longitud = 2; longitud <= letras.length(); longitud++) {
+		//Cambiaré la longitud a 1 para poder usar este método con 1 letra y de esta manera poder usar el método combinacionesPalabrasEnTableroYLetrasEnMano(String s) 
+		for(longitud = 1; longitud <= letras.length(); longitud++) {
 			receiveString("");
 		}
 	}

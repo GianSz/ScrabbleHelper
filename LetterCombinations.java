@@ -39,12 +39,12 @@ public class LetterCombinations{
 	/**
 	 * Arreglo dinámico que contiene las palabras que se podrán sugerir al usuario
 	 */
-	ArrayList <String> palabrasASugerir = new ArrayList<>();
+	private ArrayList <String> palabrasASugerir = new ArrayList<>();
 	
 	/**
 	 * Arreglo dinámico de la clase Puntaje que contiene las palabras con los puntajes
 	 */
-	ArrayList <Puntaje> palabrasConPuntaje = new ArrayList<>();
+	private ArrayList <Puntaje> palabrasConPuntaje = new ArrayList<>();
 	
 	/**
 		* En el constructor debe recibir un diccionario con las palabras
@@ -92,9 +92,10 @@ public class LetterCombinations{
 				this.palabrasASugerir.add(s);
 			}
 
-
+			crearCombinacionesConTablero(s);
 
 		}
+		
 
 		for(int i = 0; i < usedLetters.length; i++) {
 			if(!usedLetters[i].used) {
@@ -345,6 +346,41 @@ public class LetterCombinations{
 			}
 			
     	}
+	}
+
+	public void crearCombinacionesConTablero(String s){
+
+		String palabraPorDelante, palabraPorDetras; 
+
+		for(int i = 0; i < tablero.getPalabrasEnTablero().size(); i++){
+
+			palabraPorDelante = tablero.getPalabrasEnTablero().get(i) + s;
+			palabraPorDetras = s + tablero.getPalabrasEnTablero().get(i);
+
+			if(diccionario.buscarPalabras(palabraPorDelante)){
+				
+				if(!palabrasASugerir.contains(palabraPorDelante)){
+					palabrasASugerir.add(palabraPorDelante);
+				}
+			}
+			
+			if(diccionario.buscarPalabras(palabraPorDetras)){
+				
+				if(!palabrasASugerir.contains(palabraPorDetras)){
+					palabrasASugerir.add(palabraPorDetras);
+				}
+			}
+
+		}
+
+	}
+
+	public ArrayList<String> getPalabrasASugerir(){
+		return this.palabrasASugerir;
+	}
+
+	public ArrayList<Puntaje> getPalabrasConPuntaje(){
+		return this.palabrasConPuntaje;
 	}
 
 }

@@ -53,16 +53,16 @@ public class Scrabble{
 
 		do{
 
+			LetterCombinations lc = new LetterCombinations(diccionario, tablero);
+
 			if(ronda == 1 && numJugador == 1){
 
 				tablero.dibujarTablero();
 
-				tablero.hayPalabras();
+				tablero.hayPalabras(lc);
 			}
 
-			LetterCombinations lc = new LetterCombinations(diccionario, tablero);
-
-
+			
 			System.out.println("\nES EL TURNO DEL JUGADOR "+numJugador);
 
 			System.out.print("\nESCRIBA LAS LETRAS QUE TIENE EN SU MANO: ");
@@ -98,10 +98,10 @@ public class Scrabble{
 			
 
 			//Líneas para asegurarnos que las palabras a sugerir son mayor que 0.
-			if(lc.palabrasASugerir.size()>0){
+			if(lc.getPalabrasASugerir().size()>0){
 
 				System.out.println("\nEstas son tus mejores opciones:\n");
-				lc.darPuntaje(lc.palabrasASugerir);
+				lc.darPuntaje(lc.getPalabrasASugerir());
 				
 				tablero.anadirAlTablero(lc);
 

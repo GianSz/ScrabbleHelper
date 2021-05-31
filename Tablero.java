@@ -63,34 +63,34 @@ public class Tablero{
 			Scanner scanner = new Scanner(System.in);
 			
 			//Si hay mas de una combinacion posible entonces...
-			if(lc.palabrasConPuntaje.size()>1){
+			if(lc.getPalabrasConPuntaje().size()>1){
 
                 System.out.print("\nEscoge la opción de la palabra que quieres añadir al tablero: ");
 
                 int opcionElegida = scanner.nextInt();
 
-                this.palabrasEnTablero.add(lc.palabrasConPuntaje.get(opcionElegida-1).getPalabra());
+                this.palabrasEnTablero.add(lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra());
 
-				this.obtenerLetrasEnTablero(lc.palabrasConPuntaje.get(opcionElegida-1).getPalabra());
+				this.obtenerLetrasEnTablero(lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra());
 
-				System.out.println("\nSe añadirá la palabra "+lc.palabrasConPuntaje.get(opcionElegida-1).getPalabra().toUpperCase()+ " al tablero.");
+				System.out.println("\nSe añadirá la palabra "+lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra().toUpperCase()+ " al tablero.");
 
-				ubicarPalabrasEnTablero(lc.palabrasConPuntaje.get(opcionElegida-1).getPalabra());
+				ubicarPalabrasEnTablero(lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra(), lc);
 
-				System.out.println("\nSe ha añadido la palabra "+lc.palabrasConPuntaje.get(opcionElegida-1).getPalabra().toUpperCase()+ " al tablero.");
+				System.out.println("\nSe ha añadido la palabra "+lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra().toUpperCase()+ " al tablero.");
             }
 
 			//Si no, se añade directamente.
             else{
-                this.palabrasEnTablero.add(lc.palabrasConPuntaje.get(0).getPalabra());
+                this.palabrasEnTablero.add(lc.getPalabrasConPuntaje().get(0).getPalabra());
 
-				this.obtenerLetrasEnTablero(lc.palabrasConPuntaje.get(0).getPalabra());
+				this.obtenerLetrasEnTablero(lc.getPalabrasConPuntaje().get(0).getPalabra());
 
-				System.out.println("\nSe añadirá la palabra "+lc.palabrasConPuntaje.get(0).getPalabra().toUpperCase()+" al tablero.");
+				System.out.println("\nSe añadirá la palabra "+lc.getPalabrasConPuntaje().get(0).getPalabra().toUpperCase()+" al tablero.");
 
-				ubicarPalabrasEnTablero(lc.palabrasConPuntaje.get(0).getPalabra());
+				ubicarPalabrasEnTablero(lc.getPalabrasConPuntaje().get(0).getPalabra(), lc);
 
-				System.out.println("\nSe ha añadido la palabra "+lc.palabrasConPuntaje.get(0).getPalabra().toUpperCase()+" al tablero.");
+				System.out.println("\nSe ha añadido la palabra "+lc.getPalabrasConPuntaje().get(0).getPalabra().toUpperCase()+" al tablero.");
             }
 			
 		}
@@ -142,7 +142,7 @@ public class Tablero{
 	 * 
 	 * @param s palabra que será ubicada en el tablero.
 	 */
-	public void ubicarPalabrasEnTablero(String s){
+	public void ubicarPalabrasEnTablero(String s, LetterCombinations lc){
 
 		Scanner scanner = new Scanner(System.in);
 
@@ -177,16 +177,24 @@ public class Tablero{
 				}
 
 				else{
-					System.out.println("\nLas coordenadas ingresadas son inválidas. Intentelo de nuevo");
-					ubicarPalabrasEnTablero(s);
+
+					System.out.println("\nLas coordenadas ingresadas son inválidas.");
+
+					if(!cambiarPalabra(lc)){
+						this.dibujarTablero();
+						ubicarPalabrasEnTablero(s, lc);
+					}
 				}
 
 			}
 			catch(IndexOutOfBoundsException e){
 
-				System.out.println("\nTu palabra excede los limites del tablero. Vuelve a intentarlo.");
+				System.out.println("\nTu palabra excede los limites del tablero.");
 
-				ubicarPalabrasEnTablero(s);
+				if(!cambiarPalabra(lc)){
+					this.dibujarTablero();
+					ubicarPalabrasEnTablero(s, lc);
+				}
 			}
 
 		}
@@ -217,7 +225,7 @@ public class Tablero{
 					//Se muestra el tablero al salir el error.
 					dibujarTablero();
 
-					ubicarPalabrasEnTablero(s);
+					ubicarPalabrasEnTablero(s, lc);
 				}
 			}
 
@@ -228,7 +236,7 @@ public class Tablero{
 				//Se muestra el tablero al salir el error.
 				dibujarTablero();
 
-				ubicarPalabrasEnTablero(s);
+				ubicarPalabrasEnTablero(s, lc);
 			}
 
 		}
@@ -238,7 +246,7 @@ public class Tablero{
 		else{
 			System.out.println("\nHas introducido una opción incorrecta. Intentelo de nuevo.");
 
-			ubicarPalabrasEnTablero(s);
+			ubicarPalabrasEnTablero(s, lc);
 		}
 
 	}
@@ -248,7 +256,7 @@ public class Tablero{
 	/**
 	 * Método para preguntar si hay palabras previas al comienzo del programa.
 	 */
-	 public void hayPalabras(){
+	 public void hayPalabras(LetterCombinations lc){
 
 		Scanner scanner = new Scanner(System.in);
 
@@ -273,7 +281,7 @@ public class Tablero{
 
 			while( i <= respuesta2 ){
 
-				System.out.print("\nEscribe la palabra #"+i+" que se encuentra en el tablero: ");
+				System.out.print("\nEscribe la palabra #" + i + " que se encuentra en el tablero: ");
 				String palabra = scanner.next();
 
 
@@ -298,7 +306,7 @@ public class Tablero{
 						palabrasEnTablero.add(palabra);
 						this.obtenerLetrasEnTablero(palabra);
 
-						ubicarPalabrasEnTablero(palabra);
+						ubicarPalabrasEnTablero(palabra, lc);
 						
 						i++;
 
@@ -321,7 +329,7 @@ public class Tablero{
 
 			System.out.println("\nHas introducido una opción incorrecta. Intentelo de nuevo.");
 
-			hayPalabras();
+			hayPalabras(lc);
 		}
 
 	}
@@ -400,6 +408,7 @@ public class Tablero{
 
 				//Por útlimo para verificar que la palabra si existe, se hace uso del método buscarPalabras.
 				if(diccionario.buscarPalabras(palabraAVerificarVertical)){
+					palabrasEnTablero.add(palabraAVerificarVertical);
 					valida = true;
 				}
 
@@ -439,6 +448,7 @@ public class Tablero{
 
 					//Buscamos en el diccionario la palabra creada con los caracteres de izquierda a derecha.
 					else if(diccionario.buscarPalabras(palabraAVerificar)){
+						palabrasEnTablero.add(palabraAVerificar);
 						valida = true;
 					}
 	
@@ -491,7 +501,7 @@ public class Tablero{
 				}
 
 				if(diccionario.buscarPalabras(palabraAVerificarHorizontal)){
-
+					palabrasEnTablero.add(palabraAVerificarHorizontal);
 					valida = true;
 
 				}
@@ -532,6 +542,7 @@ public class Tablero{
 					}
 
 					else if(diccionario.buscarPalabras(palabraAVerificar)){
+						palabrasEnTablero.add(palabraAVerificar);
 						valida = true;
 					}
 
@@ -574,4 +585,46 @@ public class Tablero{
 	public ArrayList<Character> getLetrasEnTablero(){
 		return this.letrasEnTablero;
 	}
+
+	public boolean cambiarPalabra(LetterCombinations lc){
+
+		Scanner entrada = new Scanner(System.in);
+		char cambio; 
+		boolean quiere = false;
+
+		System.out.println("\n¿Quieres cambiar la palabra escogida?");
+		System.out.println("\n1. Si");
+		System.out.println("2. No");
+		System.out.print("\nIngrese el número de la opción deseada: ");
+
+		cambio = entrada.next().charAt(0);
+
+		if(cambio == '1'){
+			
+			quiere = true;
+
+			if(lc.getPalabrasConPuntaje().size() == 0){
+				this.palabrasEnTablero.remove(this.palabrasEnTablero.size() - 1);
+				System.out.print("Escribe la palabra nuevamente: ");	
+			}
+			this.palabrasEnTablero.remove(this.palabrasEnTablero.size() - 1);
+			System.out.println("\nEstas son tus mejores opciones:\n");
+			
+			lc.mostrarPalabrasConPuntaje(lc.getPalabrasConPuntaje());	
+			this.anadirAlTablero(lc);
+		}
+
+		else if (cambio == '2'){
+			quiere = false;
+		}
+
+		else{
+			System.out.println("Has digitado una opción erronea. Intentalo de nuevo.");
+			return cambiarPalabra(lc);
+		}
+
+		return quiere;
+	}
+
+
 }

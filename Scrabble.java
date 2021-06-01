@@ -82,15 +82,17 @@ public class Scrabble{
 			
 
 			//Las siguientes lineas sirven para sacar las combinaciones seún las letras que ya existen en el tablero. Si las letras en el tablero son inexistentes entonces se utilizan solo las letras en la mano.
-			if(tablero.getLetrasEnTablero().size() == 0){
-				lc.crearPalabras(letrasEnMiMano);
-			}
+			
+			//Siempre se hacen las combinaciones con las letrasEnMiMano
+			lc.crearPalabras(letrasEnMiMano);
+			
 
-			else{
+			//Pero, si letrasEnTablero es mayor a 0 tambien debemos hacer las combinaciones con estas letras.
+			if(tablero.getLetrasEnTablero().size() > 0){
 
 				for(int i = 0; i<tablero.getLetrasEnTablero().size(); i++){
 
-					lc.crearPalabras(letrasEnMiMano + tablero.getLetrasEnTablero().get(i));
+					lc.crearPalabrasConLetrasTablero(letrasEnMiMano, tablero.getLetrasEnTablero().get(i));
 
 				}
 

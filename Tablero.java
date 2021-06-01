@@ -77,7 +77,6 @@ public class Tablero{
 
 				ubicarPalabrasEnTablero(lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra(), lc);
 
-				System.out.println("\nSe ha añadido la palabra "+lc.getPalabrasConPuntaje().get(opcionElegida-1).getPalabra().toUpperCase()+ " al tablero.");
             }
 
 			//Si no, se añade directamente.
@@ -90,7 +89,6 @@ public class Tablero{
 
 				ubicarPalabrasEnTablero(lc.getPalabrasConPuntaje().get(0).getPalabra(), lc);
 
-				System.out.println("\nSe ha añadido la palabra "+lc.getPalabrasConPuntaje().get(0).getPalabra().toUpperCase()+" al tablero.");
             }
 			
 		}
@@ -167,13 +165,14 @@ public class Tablero{
 				System.out.print("\nEscriba la columna en la cual desea colocar la primera letra de su palabra: ");
 				int columnaElegida = scanner.nextInt();
 
-				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, orientacion, s)){
+				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, orientacion, s, lc)){
 					for(int i=0; i<s.length(); i++){
 						
 						this.tablero[filaElegida + i][columnaElegida] = s.charAt(i);
 
 					}
 					this.dibujarTablero();
+					System.out.println("\nSe ha añadido la palabra "+s.toUpperCase()+" al tablero.");
 				}
 
 				else{
@@ -184,7 +183,9 @@ public class Tablero{
 						this.dibujarTablero();
 						ubicarPalabrasEnTablero(s, lc);
 					}
+
 					else{
+
 						if(!cambiarPalabra(lc)){
 							this.dibujarTablero();
 							ubicarPalabrasEnTablero(s, lc);
@@ -221,13 +222,14 @@ public class Tablero{
 				System.out.print("\nEscriba la columna en la cual desea colocar la primera letra de su palabra: ");
 				int columnaElegida = scanner.nextInt();
 
-				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, orientacion, s)){
+				if(this.verificarValidezEnTablero(filaElegida, columnaElegida, orientacion, s, lc)){
 					for(int i=0; i<s.length(); i++){
 
 						this.tablero[filaElegida][columnaElegida+i] = s.charAt(i);
 						
 					}
 					this.dibujarTablero();
+					System.out.println("\nSe ha añadido la palabra "+s.toUpperCase()+" al tablero.");
 				}
 
 				else{
@@ -368,7 +370,7 @@ public class Tablero{
 	 * @param palabra la palabra que se quiere colocar en el tablero.
 	 * @return retorna boolean para saber si es correcto o no colocar la palabra en esta posición.
 	 */
-	public boolean verificarValidezEnTablero(int filaElegida, int columnaElegida, int orientacion, String palabra){
+	public boolean verificarValidezEnTablero(int filaElegida, int columnaElegida, int orientacion, String palabra, LetterCombinations lc){
 
 		if(this.palabrasEnTablero.size() == 1){
 
@@ -395,19 +397,43 @@ public class Tablero{
 			if(orientacion == 1){
 
 				//Se verifica si es posible colocar la palabra en el espacio indicado por el usuario.
-				for(int i = 0; i<palabra.length(); i++){
 
-					if(this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
-						valida = true;
+				//Si la palabra a elegida está dentro de combinacionesLetrasTablero entonces...
+				if(lc.existeCombinacion(palabra)){
+
+					for(int i = 0; i<palabra.length(); i++){
+
+						if(this.tablero[filaElegida+i][columnaElegida] == lc.getLetraEsp()){
+							valida = true;
+						}
+	
+						else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
+	
+							valida = false;
+							break;
+	
+						}
+	
 					}
 
-					else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
+				}
+				else{
 
-						valida = false;
-						break;
+					for(int i = 0; i<palabra.length(); i++){
+
+						if(this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
+							valida = true;
+						}
+
+						else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
+
+							valida = false;
+							break;
+
+						}
 
 					}
-
+					
 				}
 
 				//Condicional para verificar si se cruzó correctamente.
@@ -497,16 +523,38 @@ public class Tablero{
 			//Si la orientación es horizontal
 			else{
 
-				for(int i = 0; i<palabra.length(); i++){
+				if(lc.existeCombinacion(palabra)){
 
-					if(this.tablero[filaElegida][columnaElegida+i] == palabra.charAt(i)){
-						valida = true;
+					for(int i = 0; i<palabra.length(); i++){
+
+						if(this.tablero[filaElegida][columnaElegida+i] == lc.getLetraEsp()){
+							valida = true;
+						}
+	
+						else if(this.tablero[filaElegida][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
+	
+							valida = false;
+							break;
+	
+						}
+	
 					}
+				}
 
-					else if(this.tablero[filaElegida][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
+				else{
 
-						valida = false;
-						break;
+					for(int i = 0; i<palabra.length(); i++){
+
+						if(this.tablero[filaElegida][columnaElegida+i] == palabra.charAt(i)){
+							valida = true;
+						}
+
+						else if(this.tablero[filaElegida][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
+
+							valida = false;
+							break;
+
+						}
 
 					}
 

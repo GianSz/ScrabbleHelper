@@ -45,6 +45,13 @@ public class LetterCombinations{
 	 * Arreglo dinámico de la clase Puntaje que contiene las palabras con los puntajes
 	 */
 	private ArrayList <Puntaje> palabrasConPuntaje = new ArrayList<>();
+
+
+	//ATRIBUTOS PRUEBA:
+	private ArrayList<CombinacionConTablero> combinacionesLetrasTablero = new ArrayList<>();
+
+	//Letra con la que hice dicha combinacion y está en el tablero.
+	private char letraEsp;
 	
 	/**
 		* En el constructor debe recibir un diccionario con las palabras
@@ -103,8 +110,7 @@ public class LetterCombinations{
 				receiveString(s+usedLetters[i].letter);
 				usedLetters[i].used = false;
 			}
-	}
-
+		}
 	}
 
 	/**
@@ -382,5 +388,83 @@ public class LetterCombinations{
 	public ArrayList<Puntaje> getPalabrasConPuntaje(){
 		return this.palabrasConPuntaje;
 	}
+
+
+	//Métodos prueba
+	public ArrayList<CombinacionConTablero> getCombinacionesLetrasTablero(){
+		return this.combinacionesLetrasTablero;
+	}
+
+	public char getLetraEsp(){
+		return this.letraEsp;
+	}
+
+
+	public void crearPalabrasConLetrasTablero(String letrasDeMiMano, char letraEnTablero){
+		
+		
+		String s = letrasDeMiMano + letraEnTablero;
+
+		init(s);
+		
+		//Quiero solo las combinaciones de la longitud en la cual utilizo todas las letras en mi mano y la letra en el tablero en la que estoy iterando, asi que debo colocar la longitud en s.length().
+		
+		for(longitud = 2; longitud <= s.length(); longitud++){
+			receiveStringConLetrasTablero("", letraEnTablero);
+		}
+		
+	}
+
+
+	public void receiveStringConLetrasTablero(String s, char letraEnTablero){
+		
+		if(s.length() == longitud && s.contains(letraEnTablero+"")) {
+
+			//Si se encuentra en el diccionario, si no se encuentra en palabrasASugerir y si no se encuentra en palabrasEnTablero, añada la palabra en palabrasASugerir.
+			if(diccionario.buscarPalabras(s) && !(palabrasASugerir.contains(s)) && !(tablero.getPalabrasEnTablero().contains(s))) {
+				
+				this.palabrasASugerir.add(s);
+
+				CombinacionConTablero comb = new CombinacionConTablero(s, letraEnTablero);
+				combinacionesLetrasTablero.add(comb);
+			}
+
+		}
+		
+
+		for(int i = 0; i < usedLetters.length; i++) {
+			if(!usedLetters[i].used) {
+				usedLetters[i].used = true;
+				receiveStringConLetrasTablero(s+usedLetters[i].letter, letraEnTablero);
+				usedLetters[i].used = false;
+			}
+		}
+	}
+
+
+
+	/**
+     * Método para saber si la palabra elegida está dentro de las combinaciones hechas con letras en tablero.
+     * 
+     * @param s Palabra a comparar con cada combinacion.
+     * @param lc objeto LetterCombinations del cual..
+     * @return retorna si existe o no existe esta combinacion dentro del arreglo combinacionesLetrasTablero(true o false).
+     */
+    public boolean existeCombinacion(String s){
+
+        boolean existe = false;
+
+        for(int i = 0; i<this.getCombinacionesLetrasTablero().size(); i++){
+
+            if((this.getCombinacionesLetrasTablero().get(i).getCombinacion()).equals(s)){
+                letraEsp = this.getCombinacionesLetrasTablero().get(i).getLetraEspecial();
+				return true;
+            }
+
+        }
+
+        return existe;
+
+    }
 
 }

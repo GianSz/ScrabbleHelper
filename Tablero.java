@@ -180,9 +180,15 @@ public class Tablero{
 
 					System.out.println("\nLas coordenadas ingresadas son inválidas.");
 
-					if(!cambiarPalabra(lc)){
+					if(lc.getPalabrasConPuntaje().size()==0){
 						this.dibujarTablero();
 						ubicarPalabrasEnTablero(s, lc);
+					}
+					else{
+						if(!cambiarPalabra(lc)){
+							this.dibujarTablero();
+							ubicarPalabrasEnTablero(s, lc);
+						}
 					}
 				}
 
@@ -191,9 +197,15 @@ public class Tablero{
 
 				System.out.println("\nTu palabra excede los limites del tablero.");
 
-				if(!cambiarPalabra(lc)){
+				if(lc.getPalabrasConPuntaje().size()==0){
 					this.dibujarTablero();
 					ubicarPalabrasEnTablero(s, lc);
+				}
+				else{
+					if(!cambiarPalabra(lc)){
+						this.dibujarTablero();
+						ubicarPalabrasEnTablero(s, lc);
+					}
 				}
 			}
 
@@ -222,10 +234,17 @@ public class Tablero{
 
 					System.out.println("\nLas coordenadas ingresadas son inválidas. Inténtelo de nuevo.");
 
-					//Se muestra el tablero al salir el error.
-					dibujarTablero();
+					if(lc.getPalabrasConPuntaje().size()==0){
+						this.dibujarTablero();
+						ubicarPalabrasEnTablero(s, lc);
+					}
 
-					ubicarPalabrasEnTablero(s, lc);
+					else{
+						if(!cambiarPalabra(lc)){
+							this.dibujarTablero();
+							ubicarPalabrasEnTablero(s, lc);
+						}
+					}
 				}
 			}
 
@@ -233,10 +252,16 @@ public class Tablero{
 
 				System.out.println("\nTu palabra excede los limites del tablero. Vuelve a intentarlo.");
 
-				//Se muestra el tablero al salir el error.
-				dibujarTablero();
-
-				ubicarPalabrasEnTablero(s, lc);
+				if(lc.getPalabrasConPuntaje().size()==0){
+					this.dibujarTablero();
+					ubicarPalabrasEnTablero(s, lc);
+				}
+				else{
+					if(!cambiarPalabra(lc)){
+						this.dibujarTablero();
+						ubicarPalabrasEnTablero(s, lc);
+					}
+				}
 			}
 
 		}
@@ -377,9 +402,17 @@ public class Tablero{
 					}
 
 					else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
-						return false;
+
+						valida = false;
+						break;
+
 					}
 
+				}
+
+				//Condicional para verificar si se cruzó correctamente.
+				if(valida == false){
+					return false;
 				}
 
 
@@ -471,9 +504,16 @@ public class Tablero{
 					}
 
 					else if(this.tablero[filaElegida][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
-						return false;
+
+						valida = false;
+						break;
+
 					}
 
+				}
+
+				if(valida == false){
+					return false;
 				}
 
 
@@ -603,10 +643,6 @@ public class Tablero{
 			
 			quiere = true;
 
-			if(lc.getPalabrasConPuntaje().size() == 0){
-				this.palabrasEnTablero.remove(this.palabrasEnTablero.size() - 1);
-				System.out.print("Escribe la palabra nuevamente: ");	
-			}
 			this.palabrasEnTablero.remove(this.palabrasEnTablero.size() - 1);
 			System.out.println("\nEstas son tus mejores opciones:\n");
 			

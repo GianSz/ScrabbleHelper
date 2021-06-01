@@ -14,45 +14,46 @@ public class LetterCombinations{
 
 	
 	/**
-		* Arreglo auxiliar que permite ordenar las letras en la mano
-		* del jugador en un arreglo de caracteres
+	* Arreglo auxiliar que permite ordenar las letras en la mano
+	* del jugador en un arreglo de caracteres
 	*/
-	UsedLetter [] usedLetters;
+	public UsedLetter [] usedLetters;
 	/**
 	 * Atributo auxiliar para ayudar a la creación de las variantes 
 	 * de diferente longitud que resultan de las letras en la mano
 	 * del usuario
 	 * 
 	 */
-	int longitud;
+	public int longitud;
 	
 	/**
 	 * Objeto de la clase Diccionario
 	 */
-	Diccionario diccionario;
+	public Diccionario diccionario;
 	
 	/**
 	 * Objeto de la clase Tablero
 	 */
-	Tablero tablero;
+	public Tablero tablero;
 	
-	/**
-	 * Arreglo dinámico que contiene las palabras que se podrán sugerir al usuario
-	 */
+	
 	private ArrayList <String> palabrasASugerir = new ArrayList<>();
 	
-	/**
-	 * Arreglo dinámico de la clase Puntaje que contiene las palabras con los puntajes
-	 */
+	
 	private ArrayList <Puntaje> palabrasConPuntaje = new ArrayList<>();
 
 
-	//ATRIBUTOS PRUEBA:
+	
 	private ArrayList<CombinacionConTablero> combinacionesLetrasTablero = new ArrayList<>();
 
-	//Letra con la que hice dicha combinacion y está en el tablero.
-	private char letraEsp;
 	
+	private char letraEsp;
+
+	//ATRIBUTO PRUEBA:
+	private ArrayList<String> combinacionesPalabrasTablero = new ArrayList<>();
+
+	
+
 	/**
 		* En el constructor debe recibir un diccionario con las palabras
 		* válidas y el tablero en el que se esté jugando
@@ -354,9 +355,11 @@ public class LetterCombinations{
     	}
 	}
 
+
 	public void crearCombinacionesConTablero(String s){
 
 		String palabraPorDelante, palabraPorDetras; 
+
 
 		for(int i = 0; i < tablero.getPalabrasEnTablero().size(); i++){
 
@@ -367,6 +370,7 @@ public class LetterCombinations{
 				
 				if(!palabrasASugerir.contains(palabraPorDelante)){
 					palabrasASugerir.add(palabraPorDelante);
+					combinacionesPalabrasTablero.add(palabraPorDelante);
 				}
 			}
 			
@@ -374,6 +378,7 @@ public class LetterCombinations{
 				
 				if(!palabrasASugerir.contains(palabraPorDetras)){
 					palabrasASugerir.add(palabraPorDetras);
+					combinacionesPalabrasTablero.add(palabraPorDetras);
 				}
 			}
 
@@ -450,7 +455,7 @@ public class LetterCombinations{
      * @param lc objeto LetterCombinations del cual..
      * @return retorna si existe o no existe esta combinacion dentro del arreglo combinacionesLetrasTablero(true o false).
      */
-    public boolean existeCombinacion(String s){
+    public boolean existeCombinacionLetrasTablero(String s){
 
         boolean existe = false;
 
@@ -466,5 +471,26 @@ public class LetterCombinations{
         return existe;
 
     }
+
+
+	public boolean existeCombinacionPalabrasTablero(String s){
+
+        boolean existe = false;
+
+        for(int i = 0; i<this.getCombinacionesPalabrasTablero().size(); i++){
+
+            if((this.getCombinacionesPalabrasTablero().get(i)).equals(s)){
+				return true;
+            }
+
+        }
+
+        return existe;
+
+    }
+
+	public ArrayList<String> getCombinacionesPalabrasTablero(){
+		return this.combinacionesPalabrasTablero;
+	}
 
 }

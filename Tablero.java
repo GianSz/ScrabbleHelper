@@ -396,21 +396,55 @@ public class Tablero{
 			//Si la orientación es vertical.
 			if(orientacion == 1){
 
-				//Se verifica si es posible colocar la palabra en el espacio indicado por el usuario.
+				if(lc.existeCombinacionPalabrasTablero(palabra)){
 
-				//Si la palabra a elegida está dentro de combinacionesLetrasTablero entonces...
-				if(lc.existeCombinacion(palabra)){
+					String s = "";
 
 					for(int i = 0; i<palabra.length(); i++){
 
-						if(this.tablero[filaElegida+i][columnaElegida] == lc.getLetraEsp()){
+						s += this.tablero[filaElegida+i][columnaElegida];
+
+					}
+
+					s = s.trim();
+
+					if(palabra.contains(s)){
+
+						valida = true;
+
+						for(int i = 0; i< palabra.length(); i++){
+
+							if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
+	
+								return false;
+	
+							}
+
+						}
+
+						this.getPalabrasEnTablero().remove(this.getPalabrasEnTablero().indexOf(s));
+					}
+
+					else{
+						return false;
+					}
+					
+				}
+
+				//Se verifica si es posible colocar la palabra en el espacio indicado por el usuario.
+
+				//Si la palabra a elegida está dentro de combinacionesLetrasTablero entonces...
+				else if(lc.existeCombinacionLetrasTablero(palabra)){
+
+					for(int i = 0; i<palabra.length(); i++){
+
+						if(this.tablero[filaElegida+i][columnaElegida] == lc.getLetraEsp() && this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
 							valida = true;
 						}
 	
 						else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
 	
-							valida = false;
-							break;
+							return false;
 	
 						}
 	
@@ -427,8 +461,7 @@ public class Tablero{
 
 						else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) && this.tablero[filaElegida+i][columnaElegida] != ' '){
 
-							valida = false;
-							break;
+							return false;
 
 						}
 
@@ -440,6 +473,8 @@ public class Tablero{
 				if(valida == false){
 					return false;
 				}
+
+
 
 
 				//Se  debe verificar que la palabra a cocloar en el tablero está concatenada con otras palabras previamente colocadas en el tablero, y si lo está, entonces se debe verificar que si forme una palabra existente en el diccionario. Más abajo se hace se tiene en cuenta el caso en que dos o más palabras se encuentren una pegada de la otra, verificando que las nuevas combinaciones creadas a partir de está "unión" existan en el diccionario.
@@ -520,14 +555,50 @@ public class Tablero{
 
 			}
 
+
 			//Si la orientación es horizontal
 			else{
 
-				if(lc.existeCombinacion(palabra)){
+				if(lc.existeCombinacionPalabrasTablero(palabra)){
+
+					String s = "";
 
 					for(int i = 0; i<palabra.length(); i++){
 
-						if(this.tablero[filaElegida][columnaElegida+i] == lc.getLetraEsp()){
+						s += this.tablero[filaElegida][columnaElegida+i];
+
+					}
+
+					s = s.trim();
+
+					if(palabra.contains(s)){
+
+						valida = true;
+
+						for(int i = 0; i< palabra.length(); i++){
+
+							if(this.tablero[filaElegida][columnaElegida+i] != palabra.charAt(i) && this.tablero[filaElegida][columnaElegida+i] != ' '){
+	
+								return false;
+	
+							}
+
+						}
+
+						this.getPalabrasEnTablero().remove(this.getPalabrasEnTablero().indexOf(s));
+					}
+
+					else{
+						return false;
+					}
+					
+				}
+
+				else if(lc.existeCombinacionLetrasTablero(palabra)){
+
+					for(int i = 0; i<palabra.length(); i++){
+
+						if(this.tablero[filaElegida][columnaElegida+i] == lc.getLetraEsp() && this.tablero[filaElegida][columnaElegida+i] == palabra.charAt(i)){
 							valida = true;
 						}
 	

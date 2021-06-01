@@ -368,13 +368,13 @@ public class LetterCombinations{
 
 			if(diccionario.buscarPalabras(palabraPorDelante)){
 				
-				if(!palabrasASugerir.contains(palabraPorDelante)){
+				if(!palabrasASugerir.contains(palabraPorDelante) && !(tablero.getPalabrasEnTablero().contains(palabraPorDelante))){
 					palabrasASugerir.add(palabraPorDelante);
 					combinacionesPalabrasTablero.add(palabraPorDelante);
 				}
 			}
 			
-			if(diccionario.buscarPalabras(palabraPorDetras)){
+			if(diccionario.buscarPalabras(palabraPorDetras) && !(tablero.getPalabrasEnTablero().contains(palabraPorDelante))){
 				
 				if(!palabrasASugerir.contains(palabraPorDetras)){
 					palabrasASugerir.add(palabraPorDetras);
@@ -484,9 +484,7 @@ public class LetterCombinations{
             }
 
         }
-
         return existe;
-
     }
 
 	public ArrayList<String> getCombinacionesPalabrasTablero(){

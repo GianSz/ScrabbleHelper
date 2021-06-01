@@ -51,6 +51,8 @@ public class Scrabble{
 			cantJugadoresInt = Character.getNumericValue(cantJugadoresChar);
 		}
 
+
+		//Ciclo principal de juego.
 		do{
 
 			LetterCombinations lc = new LetterCombinations(diccionario, tablero);
@@ -167,6 +169,10 @@ public class Scrabble{
 				ronda++;
 			}
 
+			for (int j = 0; j < tablero.getPalabrasEnTablero().size(); j++) {
+				System.out.println(tablero.getPalabrasEnTablero().get(j));
+			}
+			
 		}
 		while(siNo == '1');
 		

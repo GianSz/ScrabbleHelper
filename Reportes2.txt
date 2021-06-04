@@ -1,23 +1,584 @@
-CREACIÓN DE LA INTERFAZ 
-Interpretamos el tablero como una matriz estática de carácteres 10*10 que inicialmente se rellena vacío
+Reportes entrega 2
+NOTA: El programa continúa con funciones de la entrega uno, por lo que la
+formación de palabras, añadirlas a el arreglo palabras Sugerir, darles el
+puntaje, entre otras, siguen funcionando igual.
 
-Para dibujar las celdas del tablero inicialmente pusimos un print que mostraba las 10 celdas horizontales y con un ciclo, replicabamos esta 10 veces
+CREACIÓN DE LA INTERFAZ
 
-Posteriormente cambiamos la anterior propuesta a imprimir solo una celda y con dos ciclos mostrar la matriz de 10*10 convirtiendose en el método dibujarTablero():
-
-	public void dibujarTablero(){
-
-		System.out.print("\n   0 1 2 3 4 5 6 7 8 9 ");
-    
-    for(int i = 0; i<10; i++){
-			
-			System.out.println("\n  ---------------------");
-			System.out.print( i + " |");
-        for(int j = 0; j < 10; j++){
-          System.out.print(letrasEnTablero[i][j] + "|");
-        }
-		}
-		System.out.println("\n  ---------------------");
-  }
-
+Interpretamos el tablero como una matriz estática de caracteres 10*10 que inicialmente se
+rellena vacío
+Para dibujar las celdas del tablero inicialmente pusimos un print que mostraba las 10 celdas
+horizontales y con un ciclo, replicamos esta 10 veces
+Posteriormente cambiamos la anterior propuesta a imprimir solo una celda y con dos ciclos
+mostrar la matriz de 10*10 convirtiéndose en el método dibujarTablero():
+public void dibujarTablero(){
+System.out.print("\n 0 1 2 3 4 5 6 7 8 9 ");
+for(int i = 0; i<10; i++){
+System.out.println("\n ---------------------");
+System.out.print( i + " |");
+for(int j = 0; j < 10; j++){
+System.out.print(letrasEnTablero[i][j] + "|");
+}
+}
+System.out.println("\n ---------------------");
+}
 el cual numeramos para facilidades a futuro
+
+UBICAMOS LAS PALABRAS
+
+decidimos aplicar las dos posibles ubicaciones del tablero, que son vertical y horizontal, lo
+cual se seleccionaba a partir de un scanner con el siguiente método:
+para la orientación en vertical:
+System.out.print("\nEscriba la fila en la cual desea colocar la primera letra de su palabra: ");
+int filaElegida = scanner.nextInt();
+System.out.print("\nEscriba la columna en la cual desea colocar la primera letra de su
+palabra: ");
+int columnaElegida = scanner.nextInt();
+for(int i=0; i<s.length(); i++){
+this.tablero[filaElegida + i][columnaElegida] = s.charAt(i);
+}
+this.dibujarTablero();
+System.out.println("\nSe ha añadido la palabra "+s.toUpperCase()+" al tablero.");
+para la orientación en horizontal:
+System.out.print("\nEscriba la fila en la cual desea colocar la primera letra de su palabra: ");
+int filaElegida = scanner.nextInt();
+System.out.print("\nEscriba la columna en la cual desea colocar la primera letra de su
+palabra: ");
+int columnaElegida = scanner.nextInt();
+for(int i=0; i<s.length(); i++){
+this.tablero[filaElegida][columnaElegida+ i] = s.charAt(i);
+}
+this.dibujarTablero();
+System.out.println("\nSe ha añadido la palabra "+s.toUpperCase()+" al tablero.");
+anunciando al final la palabra que se agrega al arreglo de palabras en el tablero
+
+PREGUNTAMOS SI HABÍAN PALABRAS ANTES
+
+teniendo en cuenta que un usuario puede usar el programa con el juego original ya iniciado,
+preguntamos si en un principio habían palabras previamente en el tablero, para ello
+preguntamos por un scanner cuantas palabras son y con esta información hicimos un ciclo
+que se repitiera el número de palabras que se ingresó anteriormente, este método hace uso
+del método ubicarPalabras() permitiendo ubicarlas vertical u horizontalmente con el
+siguiente método:
+public void hayPalabras(LetterCombinations lc){
+Scanner scanner = new Scanner(System.in);
+System.out.println("\n¿Hay palabras previamente en el tablero?");
+System.out.println("\n1. Si");
+System.out.println("2. No");
+System.out.print("\nIntroduzca la respuesta: ");
+char respuesta = scanner.next().charAt(0);
+//Condicional para saber si hay palabras previamente.
+if(respuesta == '1'){
+try{
+System.out.print("\n¿Cuantas palabras hay en el tablero?");
+int respuesta2 = scanner.nextInt();
+int i = 1;
+while( i <= respuesta2 ){
+System.out.print("\nEscribe la palabra #" + i + " que se encuentra en el tablero: ");
+String palabra = scanner.next();
+//Condicional para saber si la palabra que se va a colocar en el tablero está o no, en
+el diccionario.
+if(diccionario.buscarPalabras(palabra)){
+//Condicional para saber si la palabra que se va a colcoar ene l tablero no se ha
+colocado anteriormente.
+if(!(palabrasEnTablero.contains(palabra))){
+//Lineas para modificar la palabra por una sintaxis "correcta"
+palabra = palabra.replaceAll(" ", "");
+palabra = palabra.toLowerCase();
+palabra = palabra.replaceAll("á", "a");
+palabra = palabra.replaceAll("é", "e");
+palabra = palabra.replaceAll("í", "i");
+palabra = palabra.replaceAll("ó", "o");
+palabra = palabra.replaceAll("ú", "u");
+palabra = palabra.replaceAll("ü", "u");
+palabrasEnTablero.add(palabra);
+this.obtenerLetrasEnTablero(palabra);
+ubicarPalabrasEnTablero(palabra, lc);
+i++;
+}
+else{
+System.out.println("Esta palabra ya la has colocado en el tablero. Por favor ingresar
+de nuevo una palabra diferente.");
+}
+}
+else{
+System.out.println("Esta palabra no se encuentra en el diccionario. Por favor
+ingresar de nuevo una palabra diferente.");
+}
+}
+}
+catch(InputMismatchException e){
+System.out.println("\nHas introducido una opción incorrecta. Intentelo de nuevo.");
+hayPalabras(lc);
+}
+}
+//Se hace lo siguiente para verificar que no se haya ingresado una opción diferente a 1 y
+2.
+else if(respuesta != '1' && respuesta != '2'){
+System.out.println("\nHas introducido una opción incorrecta. Intentelo de nuevo.");
+hayPalabras(lc);
+}
+}
+
+VERIFICAR CRUZADO
+
+posterior a las funciones anteriormente mencionadas se notó la necesidad de verificar que
+las palabras si se cruzan correctamente, para ello se hizo el siguiente método booleano:
+public boolean verificarCruzado(int filaElegida, int columnaElegida, int orientacion, String
+palabra, LetterCombinations lc){
+if(orientacion == 1){
+for(int i = 0; i<palabra.length(); i++){
+if(this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
+valida = true;
+}
+else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) &&
+this.tablero[filaElegida+i][columnaElegida] != ' '){
+return false;
+}
+} else {
+for(int i = 0; i<palabra.length(); i++){
+if(this.tablero[filaElegida+i][columnaElegida+i] == palabra.charAt(i)){
+valida = true;
+}
+else if(this.tablero[filaElegida+i][columnaElegida+i] != palabra.charAt(i) &&
+this.tablero[filaElegida+i][columnaElegida] != ' '){
+return false;
+}
+}
+}
+el cual recorría previamente el arreglo donde se ubicaría la palabra, y que anunciaba en
+caso de que no coincidieran las letras y aún más importante, que sí se cruzara con una letra
+correctamente
+sin embargo este nos arrojaba un error de que se salía del tablero, aun en una posición que
+sí era válida. Esto nos llevó a dos cosas
+1. a incluir controles de excepciones para el index out of bounds, para que no se cierre
+el programa
+2. buscar por qué se daba este error y Gian Paul encontró que teníamos una suma en
+la fila Elegida en la orientación horizontal. lo que hacía que se recorriera
+verticalmente la matriz y en algunos casos se saliese
+[filaElegida+i][columnaElegida+i] → error que se solventaba solo suprimiendo
+	
+	-CORRECCIÓN 1RA PALABRA
+	
+con el método anterior nos llevó a un inconveniente con el método hayPalabras() y con la
+primera palabra, pues con esta nunca se cruzara, lo que solucionamos con un control en el
+método verificarCruzado():
+if(this.palabrasEnTablero.size() == 1){
+if(orientacion == 1 && palabra.length() + filaElegida <= 10) {
+return true;
+}
+else if (orientacion == 2 && palabra.length() + columnaElegida <= 10) {
+return true;
+}
+else {
+return false;
+}
+}
+
+JUGADORES
+
+Se implementó la posibilidad de que haya interacción entre jugadores, que tal como lo dicen
+las reglas del Scrabble , máximo 4. Lo que se implementó con un contador que llevaría las
+rondas y otro que llevará el jugador que juega actualmente. Al finalizar el movimiento se
+aumenta el contador del jugador y así hasta que acaben todos los posibles, y cuando esto
+pase se pregunta por aumentar la ronda, cosa que si ocurre se reinicia el contador del
+jugador.
+A su vez se tuvo en cuenta que la pregunta de hayPalabras() sólo ocurre en la ronda 1 y s
+ejecutado por el jugador 1, así:
+System.out.print("\nIntroduzca la cantidad de jugadores: ");
+char cantJugadoresChar = entrada.next().charAt(0);
+int cantJugadoresInt = Character.getNumericValue(cantJugadoresChar);
+int numJugador = 1;
+int ronda = 1;
+//Ciclo para verificar que no se introduzcan cantidades de jugadores equivocados.
+while(cantJugadoresInt <= 0 || cantJugadoresInt > 4){
+System.out.println("Cantidad de jugadores no permitida.");
+System.out.print("\nIntroduzca la cantidad de jugadores: ");
+cantJugadoresChar = entrada.next().charAt(0);
+cantJugadoresInt = Character.getNumericValue(cantJugadoresChar);
+}
+y el cambio de ronda y jugador se sa así:
+if(numJugador == cantJugadoresInt){
+try{
+System.out.println("\n¿Quieren volver a jugar otra ronda?");
+System.out.println("\n1. Si");
+System.out.println("2. No");
+System.out.print("\nIngrese el número de la opción deseada: ");
+siNo = entrada.next().charAt(0);
+}
+catch(InputMismatchException e){
+siNo = '0';
+}
+while(siNo != '1' && siNo != '2' ){
+try{
+System.out.println("\nHas digitado una opción incorrecta.");
+System.out.println("\n¿Quieren volver a jugar otra ronda?");
+System.out.println("\n1. Si");
+System.out.println("2. NO");
+System.out.print("\nIngrese el número de la opción deseada: ");
+entrada.nextLine();
+siNo = entrada.next().charAt(0);
+}
+catch(InputMismatchException e){
+continue;
+}
+}
+}
+if(numJugador < cantJugadoresInt){
+numJugador ++;
+}
+else{
+numJugador = 1;
+ronda++;
+}
+
+COMBINACIONES LETRAS EN EL TABLERO
+
+posteriormente nos percatamos que debíamos tener en cuenta que si había letras en el
+tablero también debían hacerse combinaciones con cada una de ellas, pero
+individualmente, para ello, se creó un arreglo con las las letras de las palabras que se van
+ingresando, es decir que en el método anadirAlTablero() se agregan todas y cada una de las
+letras de las letras de las palabras elegidas con el siguiente método:
+public void obtenerLetrasEnTablero(String s){
+for(int i = 0; i<s.length() ; i++){
+this.letrasEnTablero.add(s.charAt(i));
+}
+}
+teniendo ya esto en el arreglo anteriormente mencionado se verifica si ste tiene contenido
+(size()>0) y en caso afirmativo se hace un ciclo que añade una por una (individualmente) las
+letras de este arreglo a las letras que el usuario afirmó tener en la mano, generando con
+estas las diferentes combinaciones posibles; pero en caso negativo se hacen las
+combinaciones solamente con las letras en la mano, así:
+if(tablero.getLetrasEnTablero().size() > 0){
+for(int i = 0; i<tablero.getLetrasEnTablero().size(); i++){
+lc.crearPalabras(letrasEnMiMano+i);
+}
+}else{
+lc.crearPalabras(letrasEnMiMano);
+}
+
+VERIFICAR JUNTOS
+
+Otra regla a tener en cuenta fue que todo tramo de palabra que estuviese contiguo también
+debía formar palabras, para esto decidimos añadir al verificador cruzado una verificación
+que pasa verticalmente (hacia arriba y hacia abajo) y horizontalmente (hacia la derecha y
+hacia la izquierda) guardando todo lo que esté contiguo y preguntando (con el método
+buscar Palabra()) si realmente ese tramo es una palabra del diccionario
+inicialmente se pensaba que para todas las letras se hicieran las 4 preguntas (arriba, abajo,
+derecha, izquierda) sin embargo luego se aprovechó que por parámetro entraba la
+orientación y por ello para lo vertical solo se preguntaba una vez si lo que había hacia arriba
+y hacia abajo de la palabra formaba una también; del mismo modo que cuando es horizontal
+sólo se pregunta una vez si hacia derecha y hacia izquierda es una palabra, de la siguiente
+manera:
+Si la palabra es horizontal:
+String palabraAVerificarHorizontal = palabra;
+int indiceHorizontal = 1;
+//Se verifica si hay letras a la izquierda de la palabra a colocar.
+while(0 <= (columnaElegida - indiceHorizontal) &&
+this.tablero[filaElegida][columnaElegida - indiceHorizontal] != ' '){
+palabraAVerificarHorizontal = this.tablero[filaElegida][columnaElegida -
+indiceHorizontal] + palabraAVerificarHorizontal;
+indiceHorizontal++;
+}
+indiceHorizontal = palabra.length();
+//Se verifica si hay letras a la derecha de la palabra a colocar.
+while( (columnaElegida + indiceHorizontal) < 10 &&
+this.tablero[filaElegida][columnaElegida + indiceHorizontal] != ' '){
+palabraAVerificarHorizontal = palabraAVerificarHorizontal +
+this.tablero[filaElegida][columnaElegida + indiceHorizontal];
+indiceHorizontal++;
+}
+if(diccionario.buscarPalabras(palabraAVerificarHorizontal)){
+valida = true;
+}
+else{
+System.out.println("¡La palabra formada no existe en el diccionario!");
+return false;
+}
+for(int i = 0; i<palabra.length(); i++){
+String palabraAVerificar = "" + palabra.charAt(i);
+int indiceVertical = 1;
+//Para arriba
+while(0 <= (filaElegida - indiceVertical) && this.tablero[filaElegida -
+indiceVertical][columnaElegida+i]!=' '){
+palabraAVerificar = this.tablero[filaElegida-indiceVertical][columnaElegida+i] +
+palabraAVerificar;
+indiceVertical++;
+}
+indiceVertical = 1;
+//Para abajo
+while((filaElegida + indiceVertical)<10 && this.tablero[filaElegida +
+indiceVertical][columnaElegida+i]!=' '){
+palabraAVerificar = palabraAVerificar + this.tablero[filaElegida +
+indiceVertical][columnaElegida+i];
+indiceVertical++;
+}
+if(palabraAVerificar.length() == 1){
+valida = true;
+}
+else if(diccionario.buscarPalabras(palabraAVerificar)){
+valida = true;
+}
+else{
+System.out.println("\nNo forma una palabra :(");
+return false;
+}
+}
+Si la palabra es vertical:
+String palabraAVerificarVertical = palabra;
+int indiceVertical = 1;
+//Se mira si hay letras por encima de la palabra, si hay letras, entonces se agregan
+como un prefijo a la palabra que queremos añadir.
+while( 0 <= (filaElegida - indiceVertical) && this.tablero[filaElegida -
+indiceVertical][columnaElegida] != ' '){
+palabraAVerificarVertical = this.tablero[filaElegida - indiceVertical][columnaElegida] +
+palabraAVerificarVertical;
+indiceVertical++;
+}
+indiceVertical = palabra.length();
+//Se mira si hay letras por debajo de la palabra, si hay letras, entonces se agregan
+como un sufijo a la palabra que queremos añadir.
+while( (filaElegida + indiceVertical) < 10 && this.tablero[filaElegida +
+indiceVertical][columnaElegida] != ' '){
+palabraAVerificarVertical = palabraAVerificarVertical + this.tablero[filaElegida +
+indiceVertical][columnaElegida];
+indiceVertical++;
+}
+//Por útlimo para verificar que la palabra si existe, se hace uso del método
+buscarPalabras.
+if(diccionario.buscarPalabras(palabraAVerificarVertical)){
+valida = true;
+}
+else{
+System.out.println("¡La palabra formada no existe en el diccionario!");
+return false;
+}
+//Se verifica caracter por caracter
+for(int i = 0; i < palabra.length(); i++){
+String palabraAVerificar = "" + palabra.charAt(i);
+int indiceHorizontal = 1;
+//Hacia la izquierda
+while(0 <= (columnaElegida - indiceHorizontal) && this.tablero[filaElegida +
+i][columnaElegida - indiceHorizontal] != ' '){
+palabraAVerificar = this.tablero[filaElegida + i][columnaElegida - indiceHorizontal] +
+palabraAVerificar;
+indiceHorizontal++;
+}
+indiceHorizontal = 1;
+//Hacia la derecha
+while((columnaElegida + indiceHorizontal) < 10 && this.tablero[filaElegida +
+i][columnaElegida + indiceHorizontal] != ' '){
+palabraAVerificar += this.tablero[filaElegida + i][columnaElegida + indiceHorizontal] ;
+indiceHorizontal++;
+}
+if(palabraAVerificar.length() == 1){
+valida = true;
+}
+//Buscamos en el diccionario la palabra creada con los caracteres de izquierda a
+derecha.
+else if(diccionario.buscarPalabras(palabraAVerificar)){
+valida = true;
+}
+else{
+System.out.println("\nNo forma una palabra :(");
+return false;
+}
+}
+}
+
+NOTA: cabe destacar que aquí el método paso a llamarse verificarValidezEnTablero()
+
+PALABRAS CON TRAMOS
+
+Aparte de las palabras con las letras en el tablero, se busca conseguir palabras que se
+forman con aquellas que ya estén formadas en el mismo tablero, es decir que se unan
+posibles combinaciones con palabras completas del tablero, para ello lo que se hizo fue
+crear un método que revisa las palabras en el tablero y les antecede combinaciones y
+también les preceden de las mismas, posterior a esto se revisa si esta nueva palabra está
+en el diccionario y si es así puede aparecer en palabrasASugerir(), así:
+public void crearCombinacionesConTablero(String s){
+String palabraPorDelante, palabraPorDetras;
+for(int i = 0; i < tablero.getPalabrasEnTablero().size(); i++){
+palabraPorDelante = tablero.getPalabrasEnTablero().get(i) + s;
+palabraPorDetras = s + tablero.getPalabrasEnTablero().get(i);
+if(diccionario.buscarPalabras(palabraPorDelante)){
+palabrasASugerir.add(palabraPorDelante);
+}
+if(diccionario.buscarPalabras(palabraPorDetras )){
+palabrasASugerir.add(palabraPorDetras );
+}
+}
+}
+método que era invocado dentro de receiveString(), por lo que las combinaciones con
+tramos del tablero incluían todas las posibles combinaciones resultantes en las letras de la
+mano y las palabras ya colocadas
+
+PALABRAS JUNTAS NO ENTRABAN EN LAS OPCIONES
+
+para el método anterior encontrábamos que palabras que se formaban por concatenación
+(no directamente elegidas) no se añadían a palabras en tablero, por lo que se hizo un
+control y es que cada que se vrificara n vrificarValidezEnTablero(), en la parte de los
+contiguos, añadiera cada palabra a palabrasEnTablero(); así:
+if(diccionario.buscarPalabras(palabraAVerificarVertical)){
+palabrasEnTablero.add(palabraAVerificarVertical);
+valida = true;
+}
+haciéndole esa misma pregunta a los dos palabraAVerificar (del caso horizontal y vertical) y
+a la palabraAVerificarHorizontal
+SOLUCIÓN PARA LIMITAR PALABRAS CON LETRAS EN EL TABLERO
+Con la verificación anterior surgió la posibilidad de que se formaran palabras con letras en el
+tablero y con palabras en el tablero (sin tener esas letras en la mano), cosa que claramente
+no se puede. Error para el cual se tuvo que crear una nueva clase
+CombinacionesConTablero, que cuenta con dos atributos, la combinación y el carácter
+especial, que es la letra que se toma del tablero, cabe destacar que cuando una palabra
+contara con carácter especial se agregaba a un arreglo llamado
+combinacionesLetrasTablero y al tiempo a palabras a sugerir. Luego en el método de
+verificarValidezEnTablero() se agregó una verificación que revisaba si la palabra que se
+agregaba en el tablero estaba en combinacionesLetrasTablero y en caso afirmativo, se
+encargaba de revisar si al cruzarse, la palabra coincide con su carácter especial, así:
+else if(lc.existeCombinacionLetrasTablero(palabra)){
+for(int i = 0; i<palabra.length(); i++){
+if(this.tablero[filaElegida+i][columnaElegida] == lc.getLetraEsp() &&
+this.tablero[filaElegida+i][columnaElegida] == palabra.charAt(i)){
+valida = true;
+}
+else if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) &&
+this.tablero[filaElegida+i][columnaElegida] != ' '){
+return false;
+}
+}
+Aparte nos percatamos de que las palabras que se formaban con letras en el tablero se
+podían poner indistintamente en el tablero, siempre y cuando se cruzaran con una letra que
+hiciera parte de la combinación, cuando solo debe aceptarse que se cruce con la letra que
+se tomó del tablero. es así como se prefirió hacer que se hagan siempre las combinaciones
+con la mano y por aparte una creación de palabras con las letras del tablero, siendo este el
+que añade las palabras al arreglo mencionado anteriormente, así:
+//Siempre se hacen las combinaciones con las letrasEnMiMano
+lc.crearPalabras(letrasEnMiMano);
+//Pero, si letrasEnTablero es mayor a 0 tambien debemos hacer las combinaciones con
+estas letras.
+if(tablero.getLetrasEnTablero().size() > 0){
+for(int i = 0; i<tablero.getLetrasEnTablero().size(); i++){
+lc.crearPalabrasConLetrasTablero(letrasEnMiMano,
+tablero.getLetrasEnTablero().get(i));
+}
+}
+el metodo crearPalabrasConLetrasTablero() se modifico sacando provecho del ya existente
+crearPalabras() solo que con la modificación anteriormente mencionada, así:
+public void crearPalabrasConLetrasTablero(String letrasDeMiMano, char letraEnTablero){
+String s = letrasDeMiMano + letraEnTablero;
+init(s);
+for(longitud = 2; longitud <= s.length(); longitud++){
+receiveStringConLetrasTablero("", letraEnTablero);
+}
+}
+public void receiveStringConLetrasTablero(String s, char letraEnTablero){
+if(s.length() == longitud && s.contains(letraEnTablero+"")) {
+//Si se encuentra en el diccionario, si no se encuentra en palabrasASugerir y si no se
+encuentra en palabrasEnTablero, añada la palabra en palabrasASugerir.
+if(diccionario.buscarPalabras(s) && !(palabrasASugerir.contains(s)) &&
+!(tablero.getPalabrasEnTablero().contains(s))) {
+this.palabrasASugerir.add(s);
+CombinacionConTablero comb = new CombinacionConTablero(s, letraEnTablero);
+combinacionesLetrasTablero.add(comb);
+}
+}
+for(int i = 0; i < usedLetters.length; i++) {
+if(!usedLetters[i].used) {
+usedLetters[i].used = true;
+receiveStringConLetrasTablero(s+usedLetters[i].letter, letraEnTablero);
+usedLetters[i].used = false;
+}
+}
+}
+
+SOLUCIÓN PARA LIMITAR PALABRAS CON TRAMOS EN EL TABLERO
+
+Al igual que con las combinaciones con letras en el tablero, las las combinaciones con
+palabras en el tablero tenían el mismo problema de que se podían poner indistintamente si
+se ponían con las letras de la mano o con las del tablero, por lo que se aplicaron medidas
+similares solo que no creamos una clase extra
+1. se creó un arrayList que incluía las palabras que se formaban a partir del mtodo
+crearCombinacionesConTablero()
+2. en el verificarValidezEnTablero() se revisa que la palabra a agregar esta en el
+arreglo del numeral anterior, en caso negativo pregunta las demás situaciones
+posibles, pero si es afirmativo, entonces este pasa por el espacio en el que estará la
+palabra y revisa que lo que esté en ese espacio sí sea parte de la palabra a agregar,
+si es así se agrega la palabra, de esta manera:
+if(lc.existeCombinacionPalabrasTablero(palabra)){
+String s = "";
+for(int i = 0; i<palabra.length(); i++){
+s += this.tablero[filaElegida+i][columnaElegida];
+}
+s = s.trim();
+if(palabra.contains(s)){
+valida = true;
+for(int i = 0; i< palabra.length(); i++){
+if(this.tablero[filaElegida+i][columnaElegida] != palabra.charAt(i) &&
+this.tablero[filaElegida+i][columnaElegida] != ' '){
+return false;
+}
+}
+}
+else{
+return false;
+}
+}
+
+OPCIÓN CAMBIAR PALABRA
+
+Puesto que notamos que podían ofrecerse palabras que existen en el diccionario, pero que
+quizás no se puedan formar (debido a que no caben o no forman palabras contiguas) se
+ofrece la opción de cambiar palabra
+public boolean cambiarPalabra(LetterCombinations lc){
+Scanner entrada = new Scanner(System.in);
+char cambio;
+boolean quiere = false;
+System.out.println("\n¿Quieres cambiar la palabra escogida?");
+System.out.println("\n1. Si");
+System.out.println("2. No");
+System.out.print("\nIngrese el número de la opción deseada: ");
+cambio = entrada.next().charAt(0);
+if(cambio == '1'){
+quiere = true;
+this.palabrasEnTablero.remove(this.palabrasEnTablero.size() - 1);
+System.out.println("\nEstas son tus mejores opciones:\n");
+lc.mostrarPalabrasConPuntaje(lc.getPalabrasConPuntaje());
+this.anadirAlTablero(lc);
+}
+else if (cambio == '2'){
+quiere = false;
+}
+else{
+System.out.println("Has digitado una opción erronea. Intentalo de nuevo.");
+return cambiarPalabra(lc);
+}
+return quiere;
+}
+}
+
+SOLUCIÓN PARA PALABRAS QUE NO ESTABAN EN TABLERO
+
+Con los diferentes métodos que hemos mencionado se han ido agregando palabras
+indistintamente en el arreglo de palabrasEnTablero por lo que para las
+combinacionesConTablero() se generaban en los siguientes casos
+1. cuando se cambiaba de palabra, pues quedaba la palabra anterior en el tablero
+2. cuando al ponerse palabras encima de otras (p ej. casas encima de casa) seguían
+apareciendo palabras con la más pequeña
+para la solución de ambas situaciones se aplicaron métodos remove() implementados de la
+siguiente manera
+1. removiendo la última palabra, antes de añadir la nueva palabra seleccionada
+2. removiendo la palabra que se halla en la búsqueda
+Cabe destacar que para los métodos anteriores se presentaba un problema si por alguna
+razón anteriormente se había elegido la palabra pero no se había llegado a usar o que por
+contigüidad se volvía a formar, pues quedaba dos veces en el arreglo de palabras en el
+tablero, para ello se preguntaba si anteriormente ya estaba en el tablero, si la respuesta era
+afirmativa, no se añadía nuevamente, en caso contrario sí se añadía.
+
+SOLUCIÓN PARA LETRAS EN EL TABLERO QUE REALMENTE NO ESTABAN
+
+Similar al problema anterior, debido al método cambiarPalabra() las palabras previamente
+elegidas ya habían guardado sus letras en el arreglo de letrasEnTablero, para eliminarlas,
+pues no se usaban, se hizo un ciclo que se repetía el número de veces de la longitud de la
+última palabra añadida, y se eliminaban ese número de veces las letras del final de dicho
+arreglo.

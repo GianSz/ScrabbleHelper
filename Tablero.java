@@ -3,10 +3,10 @@
  * son arrays dinámicos, en el tablero creado se 
  * almacenarán las palabras elegidas por los juagadores.
  * 
- * @author Gian Paul Sánchez
- * @author Maria Paula Ayala
- * @author Juan Felipe Pinzón
- * @version 2021 05 29
+ * @author Gian Paul Sánchez Aristizabal
+ * @author Maria Paula Ayala Lizarazo
+ * @author Juan Felipe Pinzón Trejo
+ * @version 03/06/2021
  */
 
 import java.util.ArrayList;
@@ -17,21 +17,13 @@ import java.lang.IndexOutOfBoundsException;
 
 
 public class Tablero{
-	/**
-	 * Arreglo dinámico que contiene las palabras que están en el tablero del juego.
-	 */
+	
  	private ArrayList<String> palabrasEnTablero = new ArrayList<>();
 
 	private char[][] tablero = new char[10][10];
 
-	/**
-	 * Arreglo dinámico que contiene las letras que están en el tablero del juego.
-	 */
 	private ArrayList<Character> letrasEnTablero = new ArrayList<Character>();
 
-	/**
-	 * Diccionario del cuál sacaremos las palabras que son válidas.
-	 */
 	private Diccionario diccionario;
 
 
@@ -41,13 +33,11 @@ public class Tablero{
 	 * @param d diccionario del cuál sacamos las palabras validas del juego.
 	 */
 	public Tablero(Diccionario d){
-
 		this.diccionario = d;
 
 		for(char[] e: tablero){
 			Arrays.fill(e, ' ');
 		}
-
 	}
 
 
@@ -55,7 +45,7 @@ public class Tablero{
 	/**
 	 * Con este método se añade al tablero la palabra elegida por el usuario.
 	 * 
-	 * @param lc Objeto de la clase LetterCombinations.
+	 * @param lc Objeto de la clase LetterCombinations con el cuál accederemos a los métodos de dicha clase.
 	 */
 	public void anadirAlTablero(LetterCombinations lc){
     
@@ -139,6 +129,7 @@ public class Tablero{
 	 * Método que sirve para ubicar las palabras en la matriz tablero, haciendo uso de detalles ingresados por el usuario.
 	 * 
 	 * @param s palabra que será ubicada en el tablero.
+	 * @param lc Objeto de la clase LetterCombinations con el cuál accederemos a los métodos de dicha clase.
 	 */
 	public void ubicarPalabrasEnTablero(String s, LetterCombinations lc){
 
@@ -146,10 +137,10 @@ public class Tablero{
 
 		System.out.println("\nIntroduzca la orientación de la palabra.");
 
-		System.out.println("\n1. Vertical");
+		System.out.println("1. Vertical");
 		System.out.println("2. Horizontal");
 
-		System.out.print("\nIngrese el número de la opción deseada: ");
+		System.out.print("Ingrese el número de la opción deseada: ");
 
 		int orientacion = scanner.nextInt();
 
@@ -179,7 +170,7 @@ public class Tablero{
 
 				else{
 
-					System.out.println("\nLas coordenadas ingresadas son inválidas.");
+					System.out.println("\nLas coordenadas ingresadas son inválidas. Inténtelo de nuevo.");
 
 					if(lc.getPalabrasConPuntaje().size()==0){
 						this.dibujarTablero();
@@ -197,6 +188,7 @@ public class Tablero{
 				}
 
 			}
+
 
 			else if(orientacion == 2){
 
@@ -239,7 +231,7 @@ public class Tablero{
 
 			//Si introdujo una opción errónea
 			else{
-				System.out.println("\nHas introducido una opción incorrecta. Intentelo de nuevo.");
+				System.out.println("\nHas introducido una opción incorrecta. Inténtelo de nuevo.");
 
 				ubicarPalabrasEnTablero(s, lc);
 			}
@@ -247,7 +239,7 @@ public class Tablero{
 
 		catch(IndexOutOfBoundsException e){
 
-			System.out.println("\nLas coordenadas ingresadas son inválidas.");
+			System.out.println("\nLas coordenadas ingresadas son inválidas. Inténtelo de nuevo.");
 
 			if(lc.getPalabrasConPuntaje().size()==0){
 				this.dibujarTablero();
@@ -266,17 +258,18 @@ public class Tablero{
 
 
 	/**
-	 * Método para preguntar si hay palabras previas al comienzo del programa.
+	 * Método para preguntar si hay palabras previas al comienzo del programa. Este método luego invoca el método ubicarPalabrasEnTablero para que la palabra ingresada pueda ser ubicada en el tablero.
+	 * 
+	 * @param lc Objeto de la clase LetterCombinations con el cuál accederemos a los métodos de dicha clase.
 	 */
 	 public void hayPalabras(LetterCombinations lc){
 
 		Scanner scanner = new Scanner(System.in);
 
 		System.out.println("\n¿Hay palabras previamente en el tablero?");
-		System.out.println("\n1. Si");
+		System.out.println("1. Si");
 		System.out.println("2. No");
-
-		System.out.print("\nIntroduzca la respuesta: ");
+		System.out.print("Introduzca la respuesta: ");
 
 		char respuesta = scanner.next().charAt(0);
 
@@ -285,7 +278,7 @@ public class Tablero{
 		if(respuesta == '1'){
 			
 			try{
-				System.out.print("\n¿Cuantas palabras hay en el tablero?");
+				System.out.print("\n¿Cuantas palabras hay en el tablero? ");
 
 				int respuesta2 = scanner.nextInt();
 
@@ -297,24 +290,22 @@ public class Tablero{
 					System.out.print("\nEscribe la palabra #" + i + " que se encuentra en el tablero: ");
 					String palabra = scanner.next();
 
+					//Lineas para modificar la palabra por una sintaxis "correcta"
+					palabra = palabra.replaceAll(" ", "");
+					palabra = palabra.toLowerCase();
+					palabra = palabra.replaceAll("á", "a");
+					palabra = palabra.replaceAll("é", "e");
+					palabra = palabra.replaceAll("í", "i");
+					palabra = palabra.replaceAll("ó", "o");
+					palabra = palabra.replaceAll("ú", "u");
+					palabra = palabra.replaceAll("ü", "u");
+
 
 					//Condicional para saber si la palabra que se va a colocar en el tablero está o no, en el diccionario.
 					if(diccionario.buscarPalabras(palabra)){
 
-
 						//Condicional para saber si la palabra que se va a colcoar ene l tablero no se ha colocado anteriormente.
 						if(!(palabrasEnTablero.contains(palabra))){
-
-							//Lineas para modificar la palabra por una sintaxis "correcta"
-							palabra = palabra.replaceAll(" ", "");
-							palabra = palabra.toLowerCase();
-							palabra = palabra.replaceAll("á", "a");
-							palabra = palabra.replaceAll("é", "e");
-							palabra = palabra.replaceAll("í", "i");
-							palabra = palabra.replaceAll("ó", "o");
-							palabra = palabra.replaceAll("ú", "u");
-							palabra = palabra.replaceAll("ü", "u");
-
 							
 							palabrasEnTablero.add(palabra);
 							this.obtenerLetrasEnTablero(palabra);
@@ -326,12 +317,12 @@ public class Tablero{
 						}
 
 						else{
-							System.out.println("Esta palabra ya la has colocado en el tablero. Por favor ingresar de nuevo una palabra diferente.");
+							System.out.println("\nEsta palabra ya la has colocado en el tablero. Por favor ingresar de nuevo una palabra diferente.");
 						}
 					}
 
 					else{
-						System.out.println("Esta palabra no se encuentra en el diccionario. Por favor ingresar de nuevo una palabra diferente.");
+						System.out.println("\nEsta palabra no se encuentra en el diccionario. Por favor ingresar de nuevo una palabra diferente.");
 					}
 				}
 				
@@ -358,14 +349,17 @@ public class Tablero{
 	/**
 	 * En este método se verifica si es valida la posición en la cuál el usuasrio quiere colocar la palabra en tablero.
 	 * 
-	 * @param filaElegida fila elegida por el usuario donde se quiere comenzar a colocar la palabra, servirá en este método para verificar que las coordenadas no presenten errores.
-	 * @param columnaElegidafila columna elegida por el usuario donde se quiere comenzar a colocar la palabra, servirá en este método para verificar que las coordenadas no presenten errores.
-	 * @param orientacion manera en la cuál se quiere colocar la palabra. 1 es vertical y 2 es horizontal. También elegida por el usuario con anterioridad.
+	 * @param filaElegida Fila elegida por el usuario donde se quiere comenzar a colocar la palabra, servirá en este método para verificar que las coordenadas no presenten errores.
+	 * @param columnaElegidafila Columna elegida por el usuario donde se quiere comenzar a colocar la palabra, servirá en este método para verificar que las coordenadas no presenten errores.
+	 * @param orientacion Manera en la cuál se quiere colocar la palabra. 1 es vertical y 2 es horizontal. También elegida por el usuario con anterioridad.
 	 * @param palabra la palabra que se quiere colocar en el tablero.
-	 * @return retorna boolean para saber si es correcto o no colocar la palabra en esta posición.
+	 * @param lc Objeto de la clase LetterCombinations con el cuál accederemos a los métodos de dicha clase.
+	 * @return Retorna boolean para saber si es correcto o no colocar la palabra en esta posición.
+	 * @throws IndexOutOfBoundsException Si las coordenadas elegidas por el usuario hacen que la palabra salga del tablero saltará este error el cuál sera atrapado por un catch en el método ubicarPalabrasEnTablero.
 	 */
 	public boolean verificarValidezEnTablero(int filaElegida, int columnaElegida, int orientacion, String palabra, LetterCombinations lc)throws IndexOutOfBoundsException{
 
+		//Si es la primera palabra que se va a poner en tablero.
 		if(this.palabrasEnTablero.size() == 1){
 
           	if(orientacion == 1 && palabra.length() + filaElegida <= 10) {
@@ -383,7 +377,7 @@ public class Tablero{
 		}
 		
 
-
+		//Si no es la primera palabra que se va a poner en tablero.
 		else{		
 			
 			boolean valida = false;
@@ -391,6 +385,7 @@ public class Tablero{
 			//Si la orientación es vertical.
 			if(orientacion == 1){
 
+				//Si la 
 				if(lc.existeCombinacionPalabrasTablero(palabra)){
 
 					String s = "";
@@ -425,8 +420,6 @@ public class Tablero{
 					}
 					
 				}
-
-				//Se verifica si es posible colocar la palabra en el espacio indicado por el usuario.
 
 				//Si la palabra a elegida está dentro de combinacionesLetrasTablero entonces...
 				else if(lc.existeCombinacionLetrasTablero(palabra)){
@@ -468,7 +461,6 @@ public class Tablero{
 				if(valida == false){
 					return false;
 				}
-
 
 
 
@@ -554,6 +546,10 @@ public class Tablero{
 				}
 
 			}
+
+
+
+
 
 
 			//Si la orientación es horizontal
@@ -734,9 +730,7 @@ public class Tablero{
 	public void obtenerLetrasEnTablero(String s){
 		
 		for(int i = 0; i<s.length() ; i++){
-
 			this.letrasEnTablero.add(s.charAt(i));
-
 		}
 
 	} 
@@ -751,6 +745,13 @@ public class Tablero{
 		return this.letrasEnTablero;
 	}
 
+
+	/**
+	 * Método utilizado para preguntarle al usuario si desea cambiar la palabra que quiere añadir al tablero. Se llama cuando saltan errores en la colocación de la palabra.
+	 * 
+	 * @param lc Objeto de la clase LetterCombinations con el cuál accederemos a los métodos de dicha clase.
+	 * @return
+	 */
 	public boolean cambiarPalabra(LetterCombinations lc){
 
 		Scanner entrada = new Scanner(System.in);
@@ -758,9 +759,9 @@ public class Tablero{
 		boolean quiere = false;
 
 		System.out.println("\n¿Quieres cambiar la palabra escogida?");
-		System.out.println("\n1. Si");
+		System.out.println("1. Si");
 		System.out.println("2. No");
-		System.out.print("\nIngrese el número de la opción deseada: ");
+		System.out.print("Ingrese el número de la opción deseada: ");
 
 		cambio = entrada.next().charAt(0);
 
@@ -768,7 +769,17 @@ public class Tablero{
 			
 			quiere = true;
 
+ 
+			//Ciclo para borrar las letras que fueron agregadas en el arreglo letrasEnTablero luego de agregar la ultima palabra al tablero.
+			for(int i = this.palabrasEnTablero.get(this.palabrasEnTablero.size()-1).length(); i>0; i--){
+							
+				this.letrasEnTablero.remove(this.letrasEnTablero.size()-1);
+
+			}
+
+			//Se borra la palabra que ya había sido agregada al tablero.
 			this.palabrasEnTablero.remove(this.palabrasEnTablero.size() - 1);
+
 			System.out.println("\nEstas son tus mejores opciones:\n");
 			
 			lc.mostrarPalabrasConPuntaje(lc.getPalabrasConPuntaje());	

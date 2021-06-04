@@ -246,4 +246,4 @@ Además hicimos otro ciclo while para verificar que el usuario si escoja o 1 o 2
 ----------------------------------------------------------------------
 CASO "NO PALABRAS FORMADAS"
 
-en un principio si no se formaban palabras con las letras en la mano el programa no paraba de arrojar errores, por lo que se debió crear un control en la clase principal, donde se preguntaba si la lista de validadas sí tenía datos, y en el caso de que no, simplemente arroja un anuncio de que no se formaron palabras y seguía con su normal funcionamiento
+en un principio si no se formaban palabras con las letras en la mano el programa no paraba de arrojar errores, por lo que se debió crear un control en la clase principal, donde se preguntaba si la lista de validadas sí tenía datos, y en el caso de que no, simplemente arroja un anuncio de que no se formaron palabras y seguía con su normal funcionamiento.

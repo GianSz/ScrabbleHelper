@@ -4,10 +4,10 @@
  * Y luego invoca el método crearPalabras 
  * 
  * @author Helmuth Trefftz
- * @author Gian Paul Sánchez
- * @author Maria Paula Ayala
- * @author Juan Felipe Pinzón
- * @version 2021 05 27
+ * @author Gian Paul Sánchez Aristizabal
+ * @author Maria Paula Ayala Lizarazo
+ * @author Juan Felipe Pinzón Trejo
+ * @version 02/06/2021
  */
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -94,6 +94,7 @@ public class Scrabble{
 
 				for(int i = 0; i<tablero.getLetrasEnTablero().size(); i++){
 
+					//lc.crearPalabrasConLetrasTablero(letrasEnMiMano, tablero.getLetrasEnTablero().get(i));
 					lc.crearPalabrasConLetrasTablero(letrasEnMiMano, tablero.getLetrasEnTablero().get(i));
 
 				}
@@ -118,22 +119,13 @@ public class Scrabble{
 			
 			if(numJugador == cantJugadoresInt){
 				
-				try{
+				System.out.println("\n¿Quieren volver a jugar otra ronda?");
+				System.out.println("1. Si");
+				System.out.println("2. No");
+				System.out.print("Ingrese el número de la opción deseada: ");
 
-					System.out.println("\n¿Quieren volver a jugar otra ronda?");
+				siNo = entrada.next().charAt(0);
 
-					System.out.println("\n1. Si");
-					System.out.println("2. No");
-			
-					System.out.print("\nIngrese el número de la opción deseada: ");
-
-					siNo = entrada.next().charAt(0);
-
-				}
-				catch(InputMismatchException e){
-					siNo = '0';
-				}
-				
 
 				while(siNo != '1' && siNo != '2' ){
 
@@ -143,10 +135,10 @@ public class Scrabble{
 
 					System.out.println("\n¿Quieren volver a jugar otra ronda?");
 
-					System.out.println("\n1. Si");
+					System.out.println("1. Si");
 					System.out.println("2. NO");
 			
-					System.out.print("\nIngrese el número de la opción deseada: ");
+					System.out.print("Ingrese el número de la opción deseada: ");
 
 					entrada.nextLine();
 					siNo = entrada.next().charAt(0);
@@ -168,11 +160,7 @@ public class Scrabble{
 				numJugador = 1;
 				ronda++;
 			}
-
-			for (int j = 0; j < tablero.getPalabrasEnTablero().size(); j++) {
-				System.out.println(tablero.getPalabrasEnTablero().get(j));
-			}
-			
+		
 		}
 		while(siNo == '1');
 		
